@@ -113,6 +113,12 @@ export const createProperty = async (req, res, next) => {
       }
 
       if (req.files.additionalImages) {
+        if (req.files.additionalImages.length > 8) {
+          return res.status(400).json({
+            success: false,
+            message: 'Maximum 8 additional images allowed',
+          });
+        }
         req.body.additionalImages = req.files.additionalImages.map((file) => ({
           url: file.path || file.secure_url,
           publicId: file.filename || file.public_id,
@@ -189,6 +195,16 @@ export const updateProperty = async (req, res, next) => {
         url: file.path || file.secure_url,
         publicId: file.filename || file.public_id,
       }));
+      
+      // Check if total images exceed 8
+      const totalImages = additionalImages.length + newImages.length;
+      if (totalImages > 8) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum 8 additional images allowed. Please remove some existing images first.',
+        });
+      }
+      
       additionalImages = [...additionalImages, ...newImages];
     }
 

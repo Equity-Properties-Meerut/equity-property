@@ -70,8 +70,7 @@ export default function AddPropertyPage() {
   const [formData, setFormData] = useState({
     propertyType: "",
     title: "",
-    // price: "", // Commented out for future use
-    price: "", // Keep for compatibility but don't use in form
+    price: "",
     transactionType: "",
     area: "",
     description: "",
@@ -97,6 +96,16 @@ export default function AddPropertyPage() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const files = Array.from(e.target.files || [])
+    const MAX_ADDITIONAL_IMAGES = 8
+    
+    // Check if adding these files would exceed the limit
+    if (additionalImages.length + files.length > MAX_ADDITIONAL_IMAGES) {
+      setError(`Maximum ${MAX_ADDITIONAL_IMAGES} additional images allowed. You can add ${MAX_ADDITIONAL_IMAGES - additionalImages.length} more image(s).`)
+      e.target.value = '' // Reset input
+      return
+    }
+    
+    setError("") // Clear any previous errors
     setAdditionalImages((prev) => [...prev, ...files])
     files.forEach((file) => {
       const reader = new FileReader()
@@ -131,7 +140,7 @@ export default function AddPropertyPage() {
       // Add form fields
       formDataToSend.append("propertyType", formData.propertyType)
       formDataToSend.append("title", formData.title)
-      // formDataToSend.append("price", formData.price) // Commented out for future use
+      formDataToSend.append("price", formData.price)
       formDataToSend.append("transactionType", formData.transactionType)
       formDataToSend.append("area", formData.area)
       formDataToSend.append("description", formData.description)
@@ -243,9 +252,17 @@ export default function AddPropertyPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="rounded-lg border border-border bg-card p-6 shadow-sm"
         >
-          <Label className="mb-4 block text-base font-medium">
-            Additional Images
-          </Label>
+          <div className="mb-4 flex items-center justify-between">
+            <Label className="block text-base font-medium">
+              Additional Images
+            </Label>
+            <span className="text-sm text-muted-foreground">
+              {additionalImages.length}/8 images
+            </span>
+          </div>
+          <p className="mb-4 text-xs text-muted-foreground">
+            You can add up to 8 additional images (1 display image + 8 additional = 9 total)
+          </p>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {additionalImagesPreview.map((preview, index) => (
               <div key={index} className="relative">
@@ -265,16 +282,21 @@ export default function AddPropertyPage() {
                 </Button>
               </div>
             ))}
-            <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/50 transition-colors hover:bg-muted">
-              <Plus className="size-6 text-muted-foreground" />
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                multiple
-                onChange={handleAdditionalImagesChange}
-              />
-            </label>
+            {additionalImages.length < 8 && (
+              <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/50 transition-colors hover:bg-muted">
+                <Plus className="size-6 text-muted-foreground" />
+                <span className="mt-1 text-xs text-muted-foreground">
+                  Add Image
+                </span>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  multiple
+                  onChange={handleAdditionalImagesChange}
+                />
+              </label>
+            )}
           </div>
         </motion.div>
 
@@ -327,10 +349,9 @@ export default function AddPropertyPage() {
               />
             </div>
 
-            {/* Price input field - commented out for future use */}
-            {/* <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="price">
-                Price <span className="text-destructive">*</span>
+                Price (₹) <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="price"
@@ -339,10 +360,15 @@ export default function AddPropertyPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
                 }
-                placeholder="Enter price"
+                placeholder="Enter price in rupees"
+                min="0"
+                step="1000"
                 required
               />
-            </div> */}
+              <p className="text-xs text-muted-foreground">
+                Enter price in Indian Rupees (e.g., 5000000 for ₹50 Lakhs)
+              </p>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="transactionType">

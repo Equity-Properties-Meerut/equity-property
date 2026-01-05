@@ -9,6 +9,7 @@ import { Search, MapPin, Maximize2, ChevronLeft, ChevronRight, Loader2, Filter, 
 import Link from "next/link"
 import { propertiesAPI } from "@/lib/api"
 import meerutAreas from "@/data/meerut-areas.json"
+import { formatPrice } from "@/lib/price-format"
 import {
   Popover,
   PopoverContent,
@@ -231,6 +232,11 @@ export function PropertiesContent() {
                       <span>{property.address.area}, {property.address.city}</span>
                     </div>
                     <p className="text-xs text-foreground/60 mb-2">{property.propertyType} • {property.transactionType}</p>
+                    {property.price && (
+                      <p className="text-xl font-light text-primary mb-3">
+                        {formatPrice(property.price, property.transactionType)}
+                      </p>
+                    )}
                     <div className="flex gap-6 text-sm text-foreground/70">
                       <div className="flex items-center gap-2">
                         <Maximize2 size={16} />

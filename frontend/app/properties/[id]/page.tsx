@@ -9,6 +9,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { use } from "react"
 import { propertiesAPI, inquiriesAPI } from "@/lib/api"
+import { formatPrice } from "@/lib/price-format"
 
 interface Property {
   _id: string
@@ -226,15 +227,14 @@ export default function PropertyDetail({ params }: { params: Promise<{ id: strin
                   <MapPin size={20} />
                   <span className="text-lg">{property.address.area}, {property.address.city}</span>
                 </div>
-                <p className="text-sm text-foreground/60 mb-6">{property.propertyType} • {property.transactionType}</p>
-                {/* Price display - commented out for future use */}
-                {/* <p className="text-4xl font-light text-primary mb-8">
-                  {property.transactionType === "Rent" || property.transactionType === "Lease"
-                    ? `₹${property.price.toLocaleString()}/month`
-                    : property.price >= 10000000
-                    ? `₹${(property.price / 10000000).toFixed(1)}Cr`
-                    : `₹${(property.price / 100000).toFixed(1)}L`}
-                </p> */}
+                <p className="text-sm text-foreground/60 mb-4">{property.propertyType} • {property.transactionType}</p>
+                {property.price && (
+                  <div className="mb-8">
+                    <p className="text-4xl font-light text-primary">
+                      {formatPrice(property.price, property.transactionType)}
+                    </p>
+                  </div>
+                )}
 
                 <div className="flex flex-wrap gap-6 mb-8 pb-8 border-b border-border">
                   <div className="flex items-center gap-3">

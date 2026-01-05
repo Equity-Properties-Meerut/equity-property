@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { motion } from "framer-motion"
-import { Home, MapPin, Calendar, /* DollarSign, */ ArrowLeft, Edit } from "lucide-react"
+import { Home, MapPin, Calendar, DollarSign, ArrowLeft, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { propertiesAPI } from "@/lib/api"
 
@@ -64,14 +64,31 @@ export default function ViewPropertyPage() {
     }
   }
 
-  // formatPrice function - commented out for future use
-  // const formatPrice = (price: number) => {
-  //   return new Intl.NumberFormat("en-IN", {
-  //     style: "currency",
-  //     currency: "INR",
-  //     maximumFractionDigits: 0,
-  //   }).format(price)
-  // }
+  const formatPrice = (price: number, transactionType: string) => {
+    if (!price || price === 0) {
+      return "Price on request"
+    }
+
+    // For Rent and Lease, show monthly price
+    if (transactionType === "Rent" || transactionType === "Lease") {
+      if (price >= 100000) {
+        const lakhs = price / 100000
+        return `₹${lakhs.toFixed(lakhs % 1 === 0 ? 0 : 1)}L/month`
+      }
+      return `₹${price.toLocaleString("en-IN")}/month`
+    }
+
+    // For Sale, show in Crores or Lakhs
+    if (price >= 10000000) {
+      const crores = price / 10000000
+      return `₹${crores.toFixed(crores % 1 === 0 ? 0 : 1)}Cr`
+    } else if (price >= 100000) {
+      const lakhs = price / 100000
+      return `₹${lakhs.toFixed(lakhs % 1 === 0 ? 0 : 1)}L`
+    }
+
+    return `₹${price.toLocaleString("en-IN")}`
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-IN", {
@@ -205,16 +222,15 @@ export default function ViewPropertyPage() {
             </div>
           </div>
 
-          {/* Price display - commented out for future use */}
-          {/* <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3">
             <DollarSign className="mt-1 size-5 text-muted-foreground" />
             <div>
               <p className="text-sm text-muted-foreground">Price</p>
               <p className="text-base font-medium">
-                {formatPrice(property.price)}
+                {formatPrice(property.price, property.transactionType)}
               </p>
             </div>
-          </div> */}
+          </div>
 
           <div className="flex items-start gap-3">
             <div className="mt-1 size-5" />

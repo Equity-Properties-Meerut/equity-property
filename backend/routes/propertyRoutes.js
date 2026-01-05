@@ -25,7 +25,7 @@ router.post(
   authorize('admin'),
   upload.fields([
     { name: 'displayImage', maxCount: 1 },
-    { name: 'additionalImages', maxCount: 10 },
+    { name: 'additionalImages', maxCount: 8 },
   ]),
   createProperty
 );
@@ -36,7 +36,7 @@ router.put(
   authorize('admin'),
   upload.fields([
     { name: 'displayImage', maxCount: 1 },
-    { name: 'additionalImages', maxCount: 10 },
+    { name: 'additionalImages', maxCount: 8 },
   ]),
   updateProperty
 );
