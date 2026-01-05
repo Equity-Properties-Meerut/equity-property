@@ -694,7 +694,7 @@ export default function EditPropertyPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="flex justify-end gap-4"
+          className="flex justify-end gap-4 pb-20 sm:pb-6"
         >
           <Button
             type="button"
