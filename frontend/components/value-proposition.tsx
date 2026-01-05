@@ -27,11 +27,11 @@ const reasons = [
 
 export function ValueProposition() {
   return (
-    <section className="py-20 md:py-32 bg-secondary">
+    <section className="py-12 md:py-16 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

@@ -6,7 +6,7 @@ import Image from "next/image"
 
 export function CTABanner() {
   return (
-    <section className="py-20 md:py-32 bg-foreground text-background relative overflow-hidden">
+    <section className="py-12 md:py-16 bg-foreground text-background relative overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image

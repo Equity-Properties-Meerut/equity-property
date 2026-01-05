@@ -99,7 +99,7 @@ export function StatsSection() {
   }
 
   return (
-    <section className="py-16 bg-secondary/30 relative">
+    <section className="py-10 md:py-12 bg-secondary/30 relative">
       {/* Decorative divider line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       
